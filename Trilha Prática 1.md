@@ -8,9 +8,8 @@ atender melhor a necessidade dos clientes.
 
 ### Novas tabelas
 
-- **Tabela de estoque**: é necessário criar uma tabela de estoque, essa tabela vai ter uma relação com os estabelecimentos,
-tanto depósito como lojas. (ainda vamos)
-- Audits: Uma tabela para salvar as ações do sistema efetuadas por usuários.
+- **Vendas** (*sales*): ...
+- **Audits** (*audits*): Uma tabela para salvar as ações do sistema efetuadas por usuários.
 
 ### Novas variáveis
 
@@ -21,8 +20,11 @@ novas ou antigas, os seguintes atributos:
 - **isDeleted**: Para fazer soft delete no banco e garantir que dados não serão pertidos.
 - **deletedAt**: Para saber quando um produto foi marcado como deletado no banco de dados, afim de auditoria.
 
-
+Na tabela de produtos, vamos adicionar os seguintes
 - **Localização no produto** (*pdrt_localisation*):
+- **Vencimento de produto**
+
+
 - **Vendedor Ativo ou não** (*is_active*):
 - Localização no funcionário para que ele possa atuar nas lojas mais proximas
 
