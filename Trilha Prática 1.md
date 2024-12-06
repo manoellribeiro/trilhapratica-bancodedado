@@ -8,11 +8,11 @@ atender melhor a necessidade dos clientes.
 
 ### Novas tabelas
 
-- **Vendas** (_sales_): Uma tabela para registrar as vendas feitas para usuários finais nos canais de autoatendimento. 
-- **Audits** (_audits_): Uma tabela para salvar as ações do sistema efetuadas por usuários.
-- **Compras para o estoque** (_stock_purchases_): Tabela para registrar as ordens de compra com os fornecedores e atender o requisito RF4  
-- **Abastecimentos de containers** (_container_supplies_): Tabela para registrar os abastecimentos que certo funcionário precisa executar em um container, informando qual container e também quais produtos precisam ser reabastecidos.
-- **Clientes Finais** (_customers_): Tabela para guardar informações mínimas sobre os usuários que comprar no totem de auto atendimento
+- **Vendas** (_vendas_): Uma tabela para registrar as vendas feitas para usuários finais nos canais de autoatendimento. 
+- **Audits** (_auditorias_): Uma tabela para salvar as ações do sistema efetuadas por usuários.
+- **Compras para o estoque** (_compras_de_estoque_): Tabela para registrar as ordens de compra com os fornecedores e atender o requisito RF4  
+- **Abastecimentos de containers** (_abastecimentos_de_container_): Tabela para registrar os abastecimentos que certo funcionário precisa executar em um container, informando qual container e também quais produtos precisam ser reabastecidos.
+- **Clientes Finais** (_clientes_finais_): Tabela para guardar informações mínimas sobre os usuários que comprar no totem de auto atendimento
 
 ### Novas variáveis
 
@@ -24,13 +24,20 @@ novas ou antigas, os seguintes atributos:
 - **isDeleted**: Para fazer soft delete no banco e garantir que dados não serão pertidos.
 - **deletedAt**: Para saber quando um produto foi marcado como deletado no banco de dados, afim de auditoria.
 
-Na tabela de produtos, vamos adicionar os seguintes
+Na tabela de produtos, vamos adicionar os seguintes atributos:
 
-- **Localização no produto** (_pdrt_localisation_):
-- **Vencimento de produto**
+- **Latitude do produto** (latitude)
+- **Longitude do produto** (latitude)
+- **Vencimento de produto** (data_de_vencimento)
 
-- **Vendedor Ativo ou não** (_is_active_):
-- Localização no funcionário para que ele possa atuar nas lojas mais proximas
+Na tabela de fornecedores, vamos adicionar os seguintes atributos:
+
+- **Vendedor Ativo ou não** (_is_active_)
+
+Na tabela de funcionários, vamos adicionar os seguintes atributos:
+
+- **Latitude do produto** (latitude)
+- **Longitude do produto** (latitude)
 
 ### Novos relacionamentos
 
@@ -52,10 +59,117 @@ Com uso da ferramenta [BrModelo](https://www.brmodeloweb.com/lang/pt-br/index.ht
 
 ### Conceitual
 
-Colocar o link de uma imagem aqui
+Esse é o link público para acesso do modelo conceitual -> https://app.brmodeloweb.com/#!/publicview/67183acf36c30f6ffd71938d
+
+![Modelo conceitual para o banco de dados da plataforma CompraEsperta](assets/modelo_conceitual.png)
 
 ### Lógico
 
-Colocar o link de uma imagem aqui
+Link para a visualização do modelo lógico -> https://dbdiagram.io/d/Trilha-Pratica-Banco-de-Dados-67182e7b97a66db9a3eb4cff
+
+Código para geração do módelo lógico no [DbDiagram](https://dbdiagram.io/home)
+```
+Table tbl_produtos {
+  id_produto int [primary key, not null]
+  nm_prod varchar60 [not null]
+  cd_ean_prod varchar12 [not null]
+  ce_rfid int []
+  updatedAt timestamp
+  createdAt timestamp
+  deletedAt timestamp [default: null]
+  isDeleted bool [default: false]
+}
+
+Table produtos_vendas { //Todos os produtos que estão em uma venda
+  id int [primary key]
+  produtoId int [ref: > tbl_produtos.id_produto] // relação muitos para muitos
+  vendaId int [ref: > tbl_vendas.id] // relação muitos para muitos
+  updatedAt timestamp
+  createdAt timestamp
+  deletedAt timestamp [default: null]
+  isDeleted bool [default: false]
+}
+
+Table tbl_vendas {
+  id int [primary key, not null]
+  clienteFinalId int [ref: > tbl_clientes_finais.id] //cada venda tem um cliente final, ou seja cada cliente faz varias vendas
+  updatedAt timestamp
+  createdAt timestamp
+  deletedAt timestamp [default: null]
+  isDeleted bool [default: false]
+}
+
+Table tbl_clientes_finais {
+  id int [primary key, not null]
+  documento varchar60 [not null]
+  name varchar60 [default: null]
+  email varchar60 [default: null]
+  telefone varchar60 [default: null]
+  updatedAt timestamp
+  createdAt timestamp
+  deletedAt timestamp [default: null]
+  isDeleted bool [default: false]
+}
+
+Table tbl_categoria {
+  cp_cod_categoria int [primary key]
+  nm_categoria varchar20 [not null]
+  updatedAt timestamp
+  createdAt timestamp
+  deletedAt timestamp [default: null]
+  isDeleted bool [default: false]
+}
+
+Table tbl_rfid {
+  cp_id_dispositivo int [primary key, not null]
+  ind_venda_dispositivo bool [not null]
+}
+
+Table tbl_compras_de_estoque {
+  id int [primary key, not null]
+  updatedAt timestamp
+  createdAt timestamp
+  deletedAt timestamp [default: null]
+  isDeleted bool [default: false]
+}
+
+Table tbl_fornecedores {
+  id int [primary key, not null]
+  name varchar60 [not null]
+  document varchar60 [not null]
+  isActive bool [default: true, not null]
+}
+
+Table tbl_estabelecimentos {
+  cp_cod_estab int [primary key, not null]
+  nm_estab varchar60 [not null]
+  cnpj_estab varchar60 [default: null] //talvez seja nulável por na docs diz apenas em caso de
+  updatedAt timestamp
+  createdAt timestamp
+  deletedAt timestamp [default: null]
+  isDeleted bool [default: false] 
+}
+
+Table tbl_abastecimentos_de_containers {
+  id int [primary key, not null]
+  updatedAt timestamp
+  createdAt timestamp
+  deletedAt timestamp [default: null]
+  isDeleted bool [default: false]
+}
+
+Table tbl_funcionarios {
+  id int [primary key, not null]
+  name varchar60 [not null]
+  document varchar60 [not null]
+  latitude float [not null]
+  longitude float [not null]
+  updatedAt timestamp
+  createdAt timestamp
+  deletedAt timestamp [default: null]
+  isDeleted bool [default: false]
+}
+
+```
 
 # push de teste
