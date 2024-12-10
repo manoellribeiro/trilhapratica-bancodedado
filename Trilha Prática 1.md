@@ -8,9 +8,9 @@ atender melhor a necessidade dos clientes.
 
 ### Novas tabelas
 
-- **Vendas** (_vendas_): Uma tabela para registrar as vendas feitas para usuários finais nos canais de autoatendimento. 
+- **Vendas** (_vendas_): Uma tabela para registrar as vendas feitas para usuários finais nos canais de autoatendimento.
 - **Audits** (_auditorias_): Uma tabela para salvar as ações do sistema efetuadas por usuários.
-- **Compras para o estoque** (_compras_de_estoque_): Tabela para registrar as ordens de compra com os fornecedores e atender o requisito RF4  
+- **Compras para o estoque** (_compras_de_estoque_): Tabela para registrar as ordens de compra com os fornecedores e atender o requisito RF4
 - **Abastecimentos de containers** (_abastecimentos_de_container_): Tabela para registrar os abastecimentos que certo funcionário precisa executar em um container, informando qual container e também quais produtos precisam ser reabastecidos.
 - **Clientes Finais** (_clientes_finais_): Tabela para guardar informações mínimas sobre os usuários que comprar no totem de auto atendimento
 
@@ -43,8 +43,8 @@ Na tabela de funcionários, vamos adicionar os seguintes atributos:
 
 - **Produtos e Compras de estoque** (_produtos_stock_purchases_): Esse relacionamento é necessário para registrar as compras de estoque com fornecedores para que o sistema possa ter um histórico de compras e atenda o RF4. Toda compra de estoque pode ter um ou mais produtos associados à ela.
 - **Fornecedores e Compras de estoque** (_fornecedores_stock_purchases_): Esse relacionamento é necessário para registrar as compras de estoque com fornecedores para que o sistema possa ter um histórico de compras e atenda o RF4. Toda compra de estoque pode ter um ou mais fornecedores associados à ela.
-- **Produtos e abastecimentos de containers** (_container_supplies_produtos_): Esse relacionamento é necessário para registrar quais produtos devem ser reabastecidos em determinado container quando o sistema disparar essa ação através da automação com IA. Um reabastecimento de estoque pode ter um ou vários produtos. 
-- **Funcionário e abastecimentos de containers** (_funcionario_supplies_produtos_): Esse relacionamento é necessário para registrar qual funcionário deve reabastecer determinado container quando o sistema disparar essa ação através da automação com IA. Cara reabastecimento de estoque deve ser executado por 1 funcionário. 
+- **Produtos e abastecimentos de containers** (_container_supplies_produtos_): Esse relacionamento é necessário para registrar quais produtos devem ser reabastecidos em determinado container quando o sistema disparar essa ação através da automação com IA. Um reabastecimento de estoque pode ter um ou vários produtos.
+- **Funcionário e abastecimentos de containers** (_funcionario_supplies_produtos_): Esse relacionamento é necessário para registrar qual funcionário deve reabastecer determinado container quando o sistema disparar essa ação através da automação com IA. Cara reabastecimento de estoque deve ser executado por 1 funcionário.
 
 ### Novos requisitos
 
@@ -68,48 +68,37 @@ Esse é o link público para acesso do modelo conceitual -> https://app.brmodelo
 Link para a visualização do modelo lógico -> https://dbdiagram.io/d/Trilha-Pratica-Banco-de-Dados-67182e7b97a66db9a3eb4cff
 
 Código para geração do módelo lógico no [DbDiagram](https://dbdiagram.io/home)
+
 ```
 Table tbl_produtos {
   id_produto int [primary key, not null]
   nm_prod varchar60 [not null]
   cd_ean_prod varchar12 [not null]
-  ce_rfid int []
+  ce_rfid int
+  ind_venda_dispositivo bool [not null]
+  ce_categoria_principal int
+  ce_categoria_secundaria int
   updatedAt timestamp
   createdAt timestamp
   deletedAt timestamp [default: null]
   isDeleted bool [default: false]
 }
 
-Table produtos_vendas { //Todos os produtos que estão em uma venda
+Table tbl_vendas { //Todos os produtos que estão em uma venda
   id int [primary key]
   produtoId int [ref: > tbl_produtos.id_produto] // relação muitos para muitos
-  vendaId int [ref: > tbl_vendas.id] // relação muitos para muitos
+  cp_cod_estab int [ref : > tbl_estabelecimentos.cp_cod_estab]
   updatedAt timestamp
   createdAt timestamp
   deletedAt timestamp [default: null]
   isDeleted bool [default: false]
+  preco_venda int
+  valor_unitario int
+  quant_comprada int
+
 }
 
-Table tbl_vendas {
-  id int [primary key, not null]
-  clienteFinalId int [ref: > tbl_clientes_finais.id] //cada venda tem um cliente final, ou seja cada cliente faz varias vendas
-  updatedAt timestamp
-  createdAt timestamp
-  deletedAt timestamp [default: null]
-  isDeleted bool [default: false]
-}
 
-Table tbl_clientes_finais {
-  id int [primary key, not null]
-  documento varchar60 [not null]
-  name varchar60 [default: null]
-  email varchar60 [default: null]
-  telefone varchar60 [default: null]
-  updatedAt timestamp
-  createdAt timestamp
-  deletedAt timestamp [default: null]
-  isDeleted bool [default: false]
-}
 
 Table tbl_categoria {
   cp_cod_categoria int [primary key]
@@ -120,18 +109,18 @@ Table tbl_categoria {
   isDeleted bool [default: false]
 }
 
-Table tbl_rfid {
-  cp_id_dispositivo int [primary key, not null]
-  ind_venda_dispositivo bool [not null]
-}
-
-Table tbl_compras_de_estoque {
+Table tbl_reposicao{
   id int [primary key, not null]
+  id_funcionario int [Ref: > tbl_funcionarios.id]
+  id_produto int [Ref: > tbl_produtos.id_produto]
+  data_reposicao timestamp
   updatedAt timestamp
   createdAt timestamp
   deletedAt timestamp [default: null]
   isDeleted bool [default: false]
 }
+
+
 
 Table tbl_fornecedores {
   id int [primary key, not null]
@@ -147,16 +136,19 @@ Table tbl_estabelecimentos {
   updatedAt timestamp
   createdAt timestamp
   deletedAt timestamp [default: null]
-  isDeleted bool [default: false] 
-}
-
-Table tbl_abastecimentos_de_containers {
-  id int [primary key, not null]
-  updatedAt timestamp
-  createdAt timestamp
-  deletedAt timestamp [default: null]
   isDeleted bool [default: false]
 }
+
+Table tbl_fornecimento{
+  id int [primary key, not null]
+  id_fornecedor int [Ref: > tbl_fornecedores.id]
+  id_produto int [Ref: > tbl_produtos.id_produto]
+  data_venda timestamp
+  data_vencimento timestamp
+  valor_venda int
+  valor_unitario_produto int
+}
+
 
 Table tbl_funcionarios {
   id int [primary key, not null]
@@ -169,6 +161,15 @@ Table tbl_funcionarios {
   deletedAt timestamp [default: null]
   isDeleted bool [default: false]
 }
+
+
+
+
+
+Ref: "tbl_produtos"."ce_categoria_principal" < "tbl_categoria"."cp_cod_categoria"
+
+Ref: "tbl_produtos"."ce_categoria_secundaria" < "tbl_categoria"."cp_cod_categoria"
+
 
 ```
 
