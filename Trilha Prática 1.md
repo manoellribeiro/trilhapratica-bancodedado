@@ -68,6 +68,7 @@ Esse é o link público para acesso do modelo conceitual -> https://app.brmodelo
 Link para a visualização do modelo lógico -> https://dbdiagram.io/d/Trilha-Pratica-Banco-de-Dados-67182e7b97a66db9a3eb4cff
 
 Código para geração do módelo lógico no [DbDiagram](https://dbdiagram.io/home)
+![Modelo lógico para o banco de dados da plataforma CompraEsperta](assets/modelo_logico.png)
 
 ```
 Table tbl_produtos {
