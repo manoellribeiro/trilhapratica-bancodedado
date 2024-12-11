@@ -8,11 +8,7 @@ atender melhor a necessidade dos clientes.
 
 ### Novas tabelas
 
-- **Vendas** (_vendas_): Uma tabela para registrar as vendas feitas para usuários finais nos canais de autoatendimento.
 - **Audits** (_auditorias_): Uma tabela para salvar as ações do sistema efetuadas por usuários.
-- **Compras para o estoque** (_compras_de_estoque_): Tabela para registrar as ordens de compra com os fornecedores e atender o requisito RF4
-- **Abastecimentos de containers** (_abastecimentos_de_container_): Tabela para registrar os abastecimentos que certo funcionário precisa executar em um container, informando qual container e também quais produtos precisam ser reabastecidos.
-- **Clientes Finais** (_clientes_finais_): Tabela para guardar informações mínimas sobre os usuários que comprar no totem de auto atendimento
 
 ### Novas variáveis
 
@@ -41,17 +37,12 @@ Na tabela de funcionários, vamos adicionar os seguintes atributos:
 
 ### Novos relacionamentos
 
-- **Produtos e Compras de estoque** (_produtos_stock_purchases_): Esse relacionamento é necessário para registrar as compras de estoque com fornecedores para que o sistema possa ter um histórico de compras e atenda o RF4. Toda compra de estoque pode ter um ou mais produtos associados à ela.
-- **Fornecedores e Compras de estoque** (_fornecedores_stock_purchases_): Esse relacionamento é necessário para registrar as compras de estoque com fornecedores para que o sistema possa ter um histórico de compras e atenda o RF4. Toda compra de estoque pode ter um ou mais fornecedores associados à ela.
-- **Produtos e abastecimentos de containers** (_container_supplies_produtos_): Esse relacionamento é necessário para registrar quais produtos devem ser reabastecidos em determinado container quando o sistema disparar essa ação através da automação com IA. Um reabastecimento de estoque pode ter um ou vários produtos.
-- **Funcionário e abastecimentos de containers** (_funcionario_supplies_produtos_): Esse relacionamento é necessário para registrar qual funcionário deve reabastecer determinado container quando o sistema disparar essa ação através da automação com IA. Cara reabastecimento de estoque deve ser executado por 1 funcionário.
 
 ### Novos requisitos
 
 - **RF7**: Fazer auditoria dentro da sistema, para que seja possível localizar possíveis ações como
   deleção de lojas e etc
-- **RF8**: Registrar as vendas para clientes finais, para gerar dados de vendas e possibilitar uma implementação futura de campanhas de desconto e promoção com base no comportamento dos usuários.
-- **RF9**: O sistema deve indicar produtos que não foram vendido para clientes finais no último mês, assim será possível evitar o abastecimento de estoque desses produtos e evitar o investimento em produtos que não estão sendo vendidos.
+- **RF8**: O sistema deve indicar produtos que não foram vendido para clientes finais no último mês, assim será possível evitar o abastecimento de estoque desses produtos e evitar o investimento em produtos que não estão sendo vendidos.
 
 # Criação dos modelos de banco de dados
 
@@ -59,9 +50,9 @@ Com uso da ferramenta [BrModelo](https://www.brmodeloweb.com/lang/pt-br/index.ht
 
 ### Conceitual
 
-Esse é o link público para acesso do modelo conceitual -> https://app.brmodeloweb.com/#!/publicview/67183acf36c30f6ffd71938d
+Esse é o link público para acesso do modelo conceitual -> (atualizar o link do modelo)
 
-![Modelo conceitual para o banco de dados da plataforma CompraEsperta](assets/modelo_conceitual.png)
+>Colocar aqui a imagem do modelo conceitual que o professor disponibilizou
 
 ### Lógico
 
@@ -72,23 +63,23 @@ Código para geração do módelo lógico no [DbDiagram](https://dbdiagram.io/ho
 
 ```
 Table tbl_produtos {
-  id_produto int [primary key, not null]
-  nm_prod varchar60 [not null]
-  cd_ean_prod varchar12 [not null]
-  ce_rfid int
+  id_produto bigint [primary key, not null, increment]
+  nm_prod varchar(60) [not null]
+  cd_ean_prod varchar(12) [not null]
+  ce_rfid bigint
   ind_venda_dispositivo bool [not null]
-  ce_categoria_principal int
-  ce_categoria_secundaria int
+  ce_categoria_principal bigint [ref: > tbl_categoria.cp_cod_categoria]
+  ce_categoria_secundaria bigint [ref: > tbl_categoria.cp_cod_categoria]
   updatedAt timestamp
   createdAt timestamp
   deletedAt timestamp [default: null]
   isDeleted bool [default: false]
 }
 
-Table tbl_vendas { //Todos os produtos que estão em uma venda
-  id int [primary key]
-  produtoId int [ref: > tbl_produtos.id_produto] // relação muitos para muitos
-  cp_cod_estab int [ref : > tbl_estabelecimentos.cp_cod_estab]
+Table tbl_vendas { //Nova tabela que não está prevista no mini-mundo
+  id bigint [primary key, increment]
+  produtoId bigint [ref: > tbl_produtos.id_produto] // relação muitos para muitos
+  cp_cod_estab bigint [ref : > tbl_estabelecimentos.cp_cod_estab]
   updatedAt timestamp
   createdAt timestamp
   deletedAt timestamp [default: null]
@@ -99,21 +90,19 @@ Table tbl_vendas { //Todos os produtos que estão em uma venda
 
 }
 
-
-
-Table tbl_categoria {
-  cp_cod_categoria int [primary key]
-  nm_categoria varchar20 [not null]
+Table tbl_categoria { //Nova tabela que não está prevista no mini-mundo
+  cp_cod_categoria bigint [primary key, increment, not null]
+  nm_categoria varchar(20) [not null]
   updatedAt timestamp
   createdAt timestamp
   deletedAt timestamp [default: null]
   isDeleted bool [default: false]
 }
 
-Table tbl_reposicao{
-  id int [primary key, not null]
-  id_funcionario int [Ref: > tbl_funcionarios.id]
-  id_produto int [Ref: > tbl_produtos.id_produto]
+Table tbl_reposicao {//Nova tabela que não está prevista no mini-mundo
+  id bigint [primary key, not null, increment]
+  id_funcionario bigint [Ref: > tbl_funcionarios.id]
+  id_produto bigint [Ref: > tbl_produtos.id_produto]
   data_reposicao timestamp
   updatedAt timestamp
   createdAt timestamp
@@ -121,29 +110,27 @@ Table tbl_reposicao{
   isDeleted bool [default: false]
 }
 
-
-
 Table tbl_fornecedores {
-  id int [primary key, not null]
-  name varchar60 [not null]
-  document varchar60 [not null]
+  id bigint [primary key, not null, increment]
+  name varchar(60) [not null]
+  document varchar(60) [not null]
   isActive bool [default: true, not null]
 }
 
 Table tbl_estabelecimentos {
-  cp_cod_estab int [primary key, not null]
-  nm_estab varchar60 [not null]
-  cnpj_estab varchar60 [default: null] //talvez seja nulável por na docs diz apenas em caso de
+  cp_cod_estab bigint [primary key, not null, increment]
+  nm_estab varchar(60) [not null]
+  cnpj_estab varchar(60) [default: null] //talvez seja nulável por na docs diz apenas em caso de
   updatedAt timestamp
   createdAt timestamp
   deletedAt timestamp [default: null]
   isDeleted bool [default: false]
 }
 
-Table tbl_fornecimento{
-  id int [primary key, not null]
-  id_fornecedor int [Ref: > tbl_fornecedores.id]
-  id_produto int [Ref: > tbl_produtos.id_produto]
+Table tbl_fornecimento { //Nova tabela que não está prevista no mini-mundo
+  id bigint [primary key, not null, increment]
+  id_fornecedor bigint [Ref: > tbl_fornecedores.id]
+  id_produto bigint [Ref: > tbl_produtos.id_produto]
   data_venda timestamp
   data_vencimento timestamp
   valor_venda int
@@ -152,9 +139,9 @@ Table tbl_fornecimento{
 
 
 Table tbl_funcionarios {
-  id int [primary key, not null]
-  name varchar60 [not null]
-  document varchar60 [not null]
+  id bigint [primary key, not null, increment]
+  name varchar(60) [not null]
+  document varchar(60) [not null]
   latitude float [not null]
   longitude float [not null]
   updatedAt timestamp
@@ -163,15 +150,18 @@ Table tbl_funcionarios {
   isDeleted bool [default: false]
 }
 
+Enum audits_type {
+  delete
+  update
+}
 
-
-
-
-Ref: "tbl_produtos"."ce_categoria_principal" < "tbl_categoria"."cp_cod_categoria"
-
-Ref: "tbl_produtos"."ce_categoria_secundaria" < "tbl_categoria"."cp_cod_categoria"
-
-
+Table tbl_audits {
+  id bigint [primary key, not null, increment]
+  type audits_type
+  tableAffected varchar(30)
+  updatedAt timestamp
+  createdAt timestamp
+  deletedAt timestamp [default: null]
+  isDeleted bool [default: false]
+}
 ```
-
-# push de teste
