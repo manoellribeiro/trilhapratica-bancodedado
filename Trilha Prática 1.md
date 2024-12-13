@@ -177,3 +177,36 @@ Table tbl_audits {
   isDeleted bool [default: false]
 }
 ```
+
+# Criação do banco de Dados
+
+Para criar nosso banco de dados vamos utilizar a ferramenta [Docker](https://www.docker.com/) e seguir as seguintes instruções:
+
+### 1. Verificar se o docker está instalado na sua maquina.
+Abra o seu terminal e digite o comando `docker --version`, caso você tenha o docker instalado e pronto para ser usado no seu terminal, o comando irá retornar a sua versão instalada. Caso o comando não seja reconhecido, para prosseguir você vai precisar fazer instalação do Docker [nesse link](https://www.docker.com/) de acordo com o seu sistema operacional.
+### 2. Criar uma pasta para ser usada de volume para o banco de dados.
+Crie uma pasta onde preferir no seu computador para utilizar como volume do banco de dados. Isso vai ajudar para que no futuro quando o banco estiver populado, os dados não sejam perdidos sempre que o container precisar parar e recomeçar.
+### 3. Crie o container com uma imagem docker específicar para utilização do PostgreSQL.
+Dentro da pasta que você criou anteriormente, rode o seguinte comando para criar o container
+
+```
+docker run --name compraesperta -p 5432:5432 --network=compraesperta -v "$PWD:/var/lib/postgresql/data" -e POSTGRES_PASSWORD=password -d postgres:alpine
+```
+Se o comando for bem sucedido, ele vai retornar o id alfa numérico do seu container. Para verificar os containers rodando utilize o comando `docker ps`
+### 4. Utilizando o arquivo .sql para criar o schema do banco de dados.
+Primeiro, será necessario enviar os arquivos sql na pasta ./database_queries do projeto para dentro do container que está rodando o nosso banco de dados. Para fazer isso vamos utilizar o seguinte comando:
+```
+docker cp trilha-pratica/database_queries compraesperta:/database_queries
+```
+Após rodar o comando, agora podemos executar os arquivos, primeiro vamos criar nosso schema.
+```
+docker exec -u postgres compraesperta psql postgres -f /database_queries/1_create_database_schema.sql
+```
+E em seguida popular nosso banco de dados.
+```
+docker exec -u postgres compraesperta psql postgres -f /database_queries/2_populate_database.sql
+```
+Agora temos um banco de dados criado e populado para que possamos executar algumas queries.
+
+# Executando queries no banco de dados _compra_esperta_
+
