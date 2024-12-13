@@ -76,6 +76,12 @@ Table tbl_produtos {
   isDeleted bool [default: false]
 }
 
+Table tbl_rfid {
+  cp_id_dispositivo bigint [primary key, not null]
+  ind_venda_dispositivo bool [not null, default: false]
+}
+
+
 Table tbl_vendas { //Nova tabela que não está prevista no mini-mundo
   id bigint [primary key, increment]
   produtoId bigint [ref: > tbl_produtos.id_produto] // relação muitos para muitos
@@ -115,12 +121,18 @@ Table tbl_fornecedores {
   name varchar(60) [not null]
   document varchar(60) [not null]
   isActive bool [default: true, not null]
+  updatedAt timestamp
+  createdAt timestamp
+  deletedAt timestamp [default: null]
+  isDeleted bool [default: false]
 }
 
 Table tbl_estabelecimentos {
   cp_cod_estab bigint [primary key, not null, increment]
   nm_estab varchar(60) [not null]
   cnpj_estab varchar(60) [default: null] //talvez seja nulável por na docs diz apenas em caso de
+  UF_estab varchar(2) [not null]
+  cidade_estab varchar(5) [not null]
   updatedAt timestamp
   createdAt timestamp
   deletedAt timestamp [default: null]
