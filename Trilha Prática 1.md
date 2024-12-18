@@ -8,7 +8,10 @@ atender melhor a necessidade dos clientes.
 
 ### Novas tabelas
 
-- **Audits** (_auditorias_): Uma tabela para salvar as ações do sistema efetuadas por usuários.
+> (!!!!!!!! Detalhar melhor isso para fazer entrega)
+- Tabela de vendas (_tbl_vendas_): *Adicionar uma descrição*
+- Tabela de reposição (_tbl_reposicao_): *Adicionar uma descrição*
+- Tabela de fornecimento (_tbl_fornecimento_): *Adicionar uma descrição*
 
 ### Novas variáveis
 
@@ -32,17 +35,24 @@ Na tabela de fornecedores, vamos adicionar os seguintes atributos:
 
 Na tabela de funcionários, vamos adicionar os seguintes atributos:
 
-- **Latitude do produto** (latitude)
-- **Longitude do produto** (latitude)
+- **Latitude de onde o funcionário trabalha** (latitude)
+- **Longitude de onde o funcionário trabalhar** (latitude)
+
+Na tabela de estabelecimentos, vamos adicionar os seguintes atributos:
+
+- **Latitude de onde o estabelecimento fica** (latitude)
+- **Longitude de onde o estabelecimento fica** (latitude)
 
 ### Novos relacionamentos
 
+> (!!!!!! Detalhar melhor isso para fazer entrega)
+- Na tabela de fornecimento temos uma relação com fornecedor e produtos
+- Na tabela de reposição temos relações com funcionários e produtos
+- Na tabela de vendas temos relações com produtos
 
 ### Novos requisitos
 
-- **RF7**: Fazer auditoria dentro da sistema, para que seja possível localizar possíveis ações como
-  deleção de lojas e etc
-- **RF8**: O sistema deve indicar produtos que não foram vendido para clientes finais no último mês, assim será possível evitar o abastecimento de estoque desses produtos e evitar o investimento em produtos que não estão sendo vendidos.
+- **RF7**: O sistema deve indicar produtos que não foram vendido para clientes finais no último mês, assim será possível evitar o abastecimento de estoque desses produtos e evitar o investimento em produtos que não estão sendo vendidos.
 
 # Criação dos modelos de banco de dados
 
