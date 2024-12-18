@@ -80,6 +80,8 @@ Table tbl_produtos {
   ind_venda_dispositivo bool [not null]
   ce_categoria_principal bigint [ref: > tbl_categoria.cp_cod_categoria]
   ce_categoria_secundaria bigint [ref: > tbl_categoria.cp_cod_categoria]
+  latitude float8 [not null]
+  longitude float8 [not null]
   updatedAt timestamp
   createdAt timestamp
   deletedAt timestamp [default: null]
@@ -89,6 +91,10 @@ Table tbl_produtos {
 Table tbl_rfid {
   cp_id_dispositivo bigint [primary key, not null]
   ind_venda_dispositivo bool [not null, default: false]
+  updatedAt timestamp
+  createdAt timestamp
+  deletedAt timestamp [default: null]
+  isDeleted bool [default: false]
 }
 
 
@@ -106,7 +112,7 @@ Table tbl_vendas { //Nova tabela que não está prevista no mini-mundo
 
 }
 
-Table tbl_categoria { //Nova tabela que não está prevista no mini-mundo
+Table tbl_categoria {
   cp_cod_categoria bigint [primary key, increment, not null]
   nm_categoria varchar(20) [not null]
   updatedAt timestamp
@@ -131,6 +137,8 @@ Table tbl_fornecedores {
   name varchar(60) [not null]
   document varchar(60) [not null]
   isActive bool [default: true, not null]
+  latitude float8 [not null]
+  longitude float8 [not null]
   updatedAt timestamp
   createdAt timestamp
   deletedAt timestamp [default: null]
@@ -143,6 +151,8 @@ Table tbl_estabelecimentos {
   cnpj_estab varchar(60) [default: null] //talvez seja nulável por na docs diz apenas em caso de
   UF_estab varchar(2) [not null]
   cidade_estab varchar(5) [not null]
+  latitude float8 [not null]
+  longitude float8 [not null]
   updatedAt timestamp
   createdAt timestamp
   deletedAt timestamp [default: null]
@@ -157,6 +167,10 @@ Table tbl_fornecimento { //Nova tabela que não está prevista no mini-mundo
   data_vencimento timestamp
   valor_venda int
   valor_unitario_produto int
+  updatedAt timestamp
+  createdAt timestamp
+  deletedAt timestamp [default: null]
+  isDeleted bool [default: false]
 }
 
 
@@ -166,21 +180,6 @@ Table tbl_funcionarios {
   document varchar(60) [not null]
   latitude float [not null]
   longitude float [not null]
-  updatedAt timestamp
-  createdAt timestamp
-  deletedAt timestamp [default: null]
-  isDeleted bool [default: false]
-}
-
-Enum audits_type {
-  delete
-  update
-}
-
-Table tbl_audits {
-  id bigint [primary key, not null, increment]
-  type audits_type
-  tableAffected varchar(30)
   updatedAt timestamp
   createdAt timestamp
   deletedAt timestamp [default: null]
