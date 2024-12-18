@@ -219,3 +219,52 @@ Agora temos um banco de dados criado e populado para que possamos executar algum
 
 # Executando queries no banco de dados _compra_esperta_
 
+### Em relação as categorias, podemos imaginar os seguintes problemas:
+
+- Listar todas as categorias de produtos disponíveis para serem utilizadas: (_CCB_)
+
+```
+select * from tbl_categoria where "isDeleted" = false;
+```
+
+- Selecionar uma categoria específica através do seu _cp_cod_categoria_: (_CCB_)
+
+```
+select * from tbl_categoria where cp_cod_categoria = 2;
+```
+
+- Contar a quantidade de categorias disponíveis para utilização: (_CCB_)
+
+```
+select count(*) from tbl_categoria where "isDeleted" = false;
+```
+
+- Listar todos os produtos que tem uma categoria ativa como categoria principal: (_CCI_)
+
+```
+select *
+from tbl_produtos p
+where p.ce_categoria_principal IN (select c.cp_cod_categoria
+                                   from tbl_categoria c
+                                   where "isDeleted" = false);
+```
+
+- Listar todos os produtos que tem uma categoria ativa como categoria secundária: (_CCI_)
+
+```
+select *
+from tbl_produtos p
+where p.ce_categoria_secundaria IN (select c.cp_cod_categoria
+                                   from tbl_categoria c
+                                   where "isDeleted" = false);
+```
+
+- Listar todos os produtos, trazendo o nome do produto e as suas categorias primária e segundária. (_CCI_)
+
+```
+select p.nm_prod, cp.nm_categoria, cs.nm_categoria
+from tbl_produtos p
+         inner join tbl_categoria cp on p.ce_categoria_principal = cp.cp_cod_categoria
+         inner join tbl_categoria cs on p.ce_categoria_secundaria = cs.cp_cod_categoria;
+```
+
