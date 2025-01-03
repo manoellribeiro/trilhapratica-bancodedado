@@ -9,9 +9,10 @@ atender melhor a necessidade dos clientes.
 ### Novas tabelas
 
 > (!!!!!!!! Detalhar melhor isso para fazer entrega)
-- Tabela de vendas (_tbl_vendas_): *Adicionar uma descrição*
-- Tabela de reposição (_tbl_reposicao_): *Adicionar uma descrição*
-- Tabela de fornecimento (_tbl_fornecimento_): *Adicionar uma descrição*
+
+- Tabela de vendas (_tbl_vendas_): _Adicionar uma descrição_
+- Tabela de reposição (_tbl_reposicao_): _Adicionar uma descrição_
+- Tabela de fornecimento (_tbl_fornecimento_): _Adicionar uma descrição_
 
 ### Novas variáveis
 
@@ -46,6 +47,7 @@ Na tabela de estabelecimentos, vamos adicionar os seguintes atributos:
 ### Novos relacionamentos
 
 > (!!!!!! Detalhar melhor isso para fazer entrega)
+
 - Na tabela de fornecimento temos uma relação com fornecedor e produtos
 - Na tabela de reposição temos relações com funcionários e produtos
 - Na tabela de vendas temos relações com produtos
@@ -62,7 +64,7 @@ Com uso da ferramenta [BrModelo](https://www.brmodeloweb.com/lang/pt-br/index.ht
 
 Esse é o link público para acesso do modelo conceitual -> (atualizar o link do modelo)
 
->Colocar aqui a imagem do modelo conceitual que o professor disponibilizou
+> Colocar aqui a imagem do modelo conceitual que o professor disponibilizou
 
 ### Lógico
 
@@ -192,29 +194,43 @@ Table tbl_funcionarios {
 Para criar nosso banco de dados vamos utilizar a ferramenta [Docker](https://www.docker.com/) e seguir as seguintes instruções:
 
 ### 1. Verificar se o docker está instalado na sua maquina.
+
 Abra o seu terminal e digite o comando `docker --version`, caso você tenha o docker instalado e pronto para ser usado no seu terminal, o comando irá retornar a sua versão instalada. Caso o comando não seja reconhecido, para prosseguir você vai precisar fazer instalação do Docker [nesse link](https://www.docker.com/) de acordo com o seu sistema operacional.
+
 ### 2. Criar uma pasta para ser usada de volume para o banco de dados.
+
 Crie uma pasta onde preferir no seu computador para utilizar como volume do banco de dados. Isso vai ajudar para que no futuro quando o banco estiver populado, os dados não sejam perdidos sempre que o container precisar parar e recomeçar.
+
 ### 3. Crie o container com uma imagem docker específicar para utilização do PostgreSQL.
+
 Dentro da pasta que você criou anteriormente, rode o seguinte comando para criar o container
 
 ```
 docker run --name compraesperta -p 5432:5432 --network=compraesperta -v "$PWD:/var/lib/postgresql/data" -e POSTGRES_PASSWORD=password -d postgres:alpine
 ```
+
 Se o comando for bem sucedido, ele vai retornar o id alfa numérico do seu container. Para verificar os containers rodando utilize o comando `docker ps`
+
 ### 4. Utilizando o arquivo .sql para criar o schema do banco de dados.
+
 Primeiro, será necessario enviar os arquivos sql na pasta ./database_queries do projeto para dentro do container que está rodando o nosso banco de dados. Para fazer isso vamos utilizar o seguinte comando:
+
 ```
 docker cp trilha-pratica/database_queries compraesperta:/database_queries
 ```
+
 Após rodar o comando, agora podemos executar os arquivos, primeiro vamos criar nosso schema.
+
 ```
 docker exec -u postgres compraesperta psql postgres -f /database_queries/1_create_database_schema.sql
 ```
+
 E em seguida popular nosso banco de dados.
+
 ```
 docker exec -u postgres compraesperta psql postgres -f /database_queries/2_populate_database.sql
 ```
+
 Agora temos um banco de dados criado e populado para que possamos executar algumas queries.
 
 # Executando queries no banco de dados _compra_esperta_
@@ -268,3 +284,77 @@ from tbl_produtos p
          inner join tbl_categoria cs on p.ce_categoria_secundaria = cs.cp_cod_categoria;
 ```
 
+- Quais são os nomes de todos os produtos cadastrados no banco de dados?
+  `select nm_prod from tbl_produtos tp;`
+- Quais são os fornecedores ativos?
+  `select * from tbl_fornecedores tf where "isActive" = true `
+
+- Produtos que estão associados a fornecedores?
+
+```
+select tp.nm_prod, tf2."name" from tbl_produtos tp
+join tbl_fornecimento tf on tp.id_produto = tf.id_produto
+join tbl_fornecedores tf2 on tf2.id  = tf.id_fornecedor
+```
+
+- nome e o CPF de todos os funcionários cadastrados
+  `select  "name", "document" from tbl_funcionarios tf `
+
+- Quais produtos estão com estoque abaixo do mínimo em uma loja?
+
+- Quantidade de estabelecimentos por Estado
+
+```
+select "UF_estab", count("UF_estab") from tbl_estabelecimentos te
+group by "UF_estab"
+```
+
+- Nome e o CNPJ do fornecedor mais recente cadastrado
+
+```
+select "name", "document" from tbl_fornecedores tf
+order by "createdAt" desc limit 1
+```
+
+- Quais são os produtos com maior vazão em um determinado período
+
+```
+select  count(tp.id_produto) as "quantidade", tp.nm_prod from tbl_fornecimento tf
+join tbl_produtos tp on tf.id_produto = tp.id_produto
+where  tf.data_venda between tf."createdAt" and now()
+group by tp.id_produto
+order by "quantidade" desc;
+```
+
+- Lista os fornecedores que estão inativos há mais de 180 dias ou que não fizeram nenhuma venda.
+
+```
+SELECT
+    f.id,
+    f.name AS nome_fornecedor,
+    max(tf.data_venda) as "ultima_data_venda'"
+FROM
+    tbl_fornecedores f
+LEFT JOIN
+    tbl_fornecimento tf on f.id = tf.id_fornecedor
+group by f.id, f."name"
+having max(tf.data_venda) < current_date - interval '180 day' or max(tf.data_venda) is null;
+```
+
+- Produtos fornecidos por mais de um fornecedor.
+
+```
+SELECT
+    tp.nm_prod,
+    COUNT(DISTINCT tf2.id) AS num_fornecedores
+FROM
+    tbl_fornecimento tf
+LEFT JOIN
+    tbl_produtos tp ON tf.id_produto = tp.id_produto
+LEFT JOIN
+    tbl_fornecedores tf2 ON tf.id_fornecedor = tf2.id
+GROUP BY
+    tp.id_produto, tp.nm_prod
+HAVING
+    COUNT(DISTINCT tf2.id) > 1;
+```
