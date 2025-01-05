@@ -235,27 +235,39 @@ Agora temos um banco de dados criado e populado para que possamos executar algum
 
 # Executando queries no banco de dados _compra_esperta_
 
-### Em relação as categorias, podemos imaginar os seguintes problemas:
-
-- Listar todas as categorias de produtos disponíveis para serem utilizadas: (_CCB_)
+### Listar todas as categorias de produtos disponíveis para serem utilizadas: (_CCB_)
 
 ```
 select * from tbl_categoria where "isDeleted" = false;
 ```
 
-- Selecionar uma categoria específica através do seu _cp_cod_categoria_: (_CCB_)
+- Tempo para executar 50 vezes: 00:00:00.003411 (3.411 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+
+### Selecionar uma categoria específica através do seu _cp_cod_categoria_: (_CCB_)
 
 ```
 select * from tbl_categoria where cp_cod_categoria = 2;
 ```
 
-- Contar a quantidade de categorias disponíveis para utilização: (_CCB_)
+- Tempo para executar 50 vezes: 00:00:00.00079 (0.079 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+
+### Contar a quantidade de categorias disponíveis para utilização: (_CCB_)
 
 ```
 select count(*) from tbl_categoria where "isDeleted" = false;
 ```
 
-- Listar todos os produtos que tem uma categoria ativa como categoria principal: (_CCI_)
+- Tempo para executar 50 vezes: 00:00:00.000469 (0.469 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+### Listar todos os produtos que tem uma categoria ativa como categoria principal: (_CCI_)
 
 ```
 select *
@@ -265,7 +277,12 @@ where p.ce_categoria_principal IN (select c.cp_cod_categoria
                                    where "isDeleted" = false);
 ```
 
-- Listar todos os produtos que tem uma categoria ativa como categoria secundária: (_CCI_)
+- Tempo para executar 50 vezes: 00:00:00.011191 (11.191 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+
+### Listar todos os produtos que tem uma categoria ativa como categoria secundária: (_CCI_)
 
 ```
 select *
@@ -275,7 +292,11 @@ where p.ce_categoria_secundaria IN (select c.cp_cod_categoria
                                    where "isDeleted" = false);
 ```
 
-- Listar todos os produtos, trazendo o nome do produto e as suas categorias primária e segundária. (_CCI_)
+- Tempo para executar 50 vezes: 00:00:00.002718 (2.718 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+### Listar todos os produtos, trazendo o nome do produto e as suas categorias primária e segundária. (_CCI_)
 
 ```
 select p.nm_prod, cp.nm_categoria, cs.nm_categoria
@@ -284,12 +305,42 @@ from tbl_produtos p
          inner join tbl_categoria cs on p.ce_categoria_secundaria = cs.cp_cod_categoria;
 ```
 
-- Quais são os nomes de todos os produtos cadastrados no banco de dados?
-  `select nm_prod from tbl_produtos tp;`
-- Quais são os fornecedores ativos?
-  `select * from tbl_fornecedores tf where "isActive" = true `
+- Tempo para executar 50 vezes: 00:00:00.006505 (6.505 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
 
-- Produtos que estão associados a fornecedores?
+### Criar uma nova categoria (_CCB_)
+
+```
+insert into "tbl_categoria" ("nm_categoria", "createdAt", "updatedAt")
+values ('Nome da Categoria', NOW(), NOW());
+```
+
+- Tempo para executar 50 vezes: 00:00:00.006211 (6.211 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+### Quais são os nomes de todos os produtos cadastrados no banco de dados?
+
+```
+select nm_prod from tbl_produtos tp;
+```
+
+- Tempo para executar 50 vezes: ___________
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+### Quais são os fornecedores ativos?
+  
+```
+select * from tbl_fornecedores tf where "isActive" = true
+```
+
+- Tempo para executar 50 vezes: ___________
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+### Produtos que estão associados a fornecedores?
 
 ```
 select tp.nm_prod, tf2."name" from tbl_produtos tp
@@ -297,26 +348,53 @@ join tbl_fornecimento tf on tp.id_produto = tf.id_produto
 join tbl_fornecedores tf2 on tf2.id  = tf.id_fornecedor
 ```
 
-- nome e o CPF de todos os funcionários cadastrados
-  `select  "name", "document" from tbl_funcionarios tf `
+- Tempo para executar 50 vezes: ___________
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
 
-- Quais produtos estão com estoque abaixo do mínimo em uma loja?
+### Nome e o CPF de todos os funcionários cadastrados
 
-- Quantidade de estabelecimentos por Estado
+```
+select  "name", "document" from tbl_funcionarios tf
+```
+
+- Tempo para executar 50 vezes: ___________
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+### Quais produtos estão com estoque abaixo do mínimo em uma loja?
+
+```
+query
+```
+
+- Tempo para executar 50 vezes: ___________
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+### Quantidade de estabelecimentos por Estado
 
 ```
 select "UF_estab", count("UF_estab") from tbl_estabelecimentos te
 group by "UF_estab"
 ```
 
-- Nome e o CNPJ do fornecedor mais recente cadastrado
+- Tempo para executar 50 vezes: ___________
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+### Nome e o CNPJ do fornecedor mais recente cadastrado
 
 ```
 select "name", "document" from tbl_fornecedores tf
 order by "createdAt" desc limit 1
 ```
 
-- Quais são os produtos com maior vazão em um determinado período
+- Tempo para executar 50 vezes: ___________
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+### Quais são os produtos com maior vazão em um determinado período
 
 ```
 select  count(tp.id_produto) as "quantidade", tp.nm_prod from tbl_fornecimento tf
@@ -326,7 +404,11 @@ group by tp.id_produto
 order by "quantidade" desc;
 ```
 
-- Lista os fornecedores que estão inativos há mais de 180 dias ou que não fizeram nenhuma venda.
+- Tempo para executar 50 vezes: ___________
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+### Lista os fornecedores que estão inativos há mais de 180 dias ou que não fizeram nenhuma venda.
 
 ```
 SELECT
@@ -341,7 +423,11 @@ group by f.id, f."name"
 having max(tf.data_venda) < current_date - interval '180 day' or max(tf.data_venda) is null;
 ```
 
-- Produtos fornecidos por mais de um fornecedor.
+- Tempo para executar 50 vezes: ___________
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
+
+### Produtos fornecidos por mais de um fornecedor.
 
 ```
 SELECT
@@ -358,3 +444,7 @@ GROUP BY
 HAVING
     COUNT(DISTINCT tf2.id) > 1;
 ```
+
+- Tempo para executar 50 vezes: ___________
+- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com tunning: _________
