@@ -54,11 +54,13 @@ Na tabela de estabelecimentos, vamos adicionar os seguintes atributos:
 
 ### Novos requisitos
 
-- **RF7**: O sistema deve indicar produtos que não foram vendido para clientes finais no último mês, assim será possível evitar o abastecimento de estoque desses produtos e evitar o investimento em produtos que não estão sendo vendidos.
+- **RF7**: O sistema deve indicar produtos que não foram vendido para clientes finais no último mês, assim será possível
+  evitar o abastecimento de estoque desses produtos e evitar o investimento em produtos que não estão sendo vendidos.
 
 # Criação dos modelos de banco de dados
 
-Com uso da ferramenta [BrModelo](https://www.brmodeloweb.com/lang/pt-br/index.html), criamos o modelo conceitual do banco de dados. Já para criação do modelo lógico a ferramenta escolhida foi o [DbDiagram](https://dbdiagram.io/home).
+Com uso da ferramenta [BrModelo](https://www.brmodeloweb.com/lang/pt-br/index.html), criamos o modelo conceitual do
+banco de dados. Já para criação do modelo lógico a ferramenta escolhida foi o [DbDiagram](https://dbdiagram.io/home).
 
 ### Conceitual
 
@@ -68,7 +70,8 @@ Esse é o link público para acesso do modelo conceitual -> (atualizar o link do
 
 ### Lógico
 
-Link para a visualização do modelo lógico -> https://dbdiagram.io/d/Trilha-Pratica-Banco-de-Dados-67182e7b97a66db9a3eb4cff
+Link para a visualização do modelo
+lógico -> https://dbdiagram.io/d/Trilha-Pratica-Banco-de-Dados-67182e7b97a66db9a3eb4cff
 
 Código para geração do módelo lógico no [DbDiagram](https://dbdiagram.io/home)
 ![Modelo lógico para o banco de dados da plataforma CompraEsperta](assets/modelo_logico.png)
@@ -191,15 +194,19 @@ Table tbl_funcionarios {
 
 # Criação do banco de Dados
 
-Para criar nosso banco de dados vamos utilizar a ferramenta [Docker](https://www.docker.com/) e seguir as seguintes instruções:
+Para criar nosso banco de dados vamos utilizar a ferramenta [Docker](https://www.docker.com/) e seguir as seguintes
+instruções:
 
 ### 1. Verificar se o docker está instalado na sua maquina.
 
-Abra o seu terminal e digite o comando `docker --version`, caso você tenha o docker instalado e pronto para ser usado no seu terminal, o comando irá retornar a sua versão instalada. Caso o comando não seja reconhecido, para prosseguir você vai precisar fazer instalação do Docker [nesse link](https://www.docker.com/) de acordo com o seu sistema operacional.
+Abra o seu terminal e digite o comando `docker --version`, caso você tenha o docker instalado e pronto para ser usado no
+seu terminal, o comando irá retornar a sua versão instalada. Caso o comando não seja reconhecido, para prosseguir você
+vai precisar fazer instalação do Docker [nesse link](https://www.docker.com/) de acordo com o seu sistema operacional.
 
 ### 2. Criar uma pasta para ser usada de volume para o banco de dados.
 
-Crie uma pasta onde preferir no seu computador para utilizar como volume do banco de dados. Isso vai ajudar para que no futuro quando o banco estiver populado, os dados não sejam perdidos sempre que o container precisar parar e recomeçar.
+Crie uma pasta onde preferir no seu computador para utilizar como volume do banco de dados. Isso vai ajudar para que no
+futuro quando o banco estiver populado, os dados não sejam perdidos sempre que o container precisar parar e recomeçar.
 
 ### 3. Crie o container com uma imagem docker específicar para utilização do PostgreSQL.
 
@@ -209,11 +216,13 @@ Dentro da pasta que você criou anteriormente, rode o seguinte comando para cria
 docker run --name compraesperta -p 5432:5432 --network=compraesperta -v "$PWD:/var/lib/postgresql/data" -e POSTGRES_PASSWORD=password -d postgres:alpine
 ```
 
-Se o comando for bem sucedido, ele vai retornar o id alfa numérico do seu container. Para verificar os containers rodando utilize o comando `docker ps`
+Se o comando for bem sucedido, ele vai retornar o id alfa numérico do seu container. Para verificar os containers
+rodando utilize o comando `docker ps`
 
 ### 4. Utilizando o arquivo .sql para criar o schema do banco de dados.
 
-Primeiro, será necessario enviar os arquivos sql na pasta ./database_queries do projeto para dentro do container que está rodando o nosso banco de dados. Para fazer isso vamos utilizar o seguinte comando:
+Primeiro, será necessario enviar os arquivos sql na pasta ./database_queries do projeto para dentro do container que
+está rodando o nosso banco de dados. Para fazer isso vamos utilizar o seguinte comando:
 
 ```
 docker cp trilha-pratica/database_queries compraesperta:/database_queries
@@ -242,9 +251,8 @@ select * from tbl_categoria where "isDeleted" = false;
 ```
 
 - Tempo para executar 50 vezes: 00:00:00.003411 (3.411 milliseconds)
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
-
 
 ### Selecionar uma categoria específica através do seu _cp_cod_categoria_: (_CCB_)
 
@@ -253,9 +261,8 @@ select * from tbl_categoria where cp_cod_categoria = 2;
 ```
 
 - Tempo para executar 50 vezes: 00:00:00.00079 (0.079 milliseconds)
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
-
 
 ### Contar a quantidade de categorias disponíveis para utilização: (_CCB_)
 
@@ -264,7 +271,7 @@ select count(*) from tbl_categoria where "isDeleted" = false;
 ```
 
 - Tempo para executar 50 vezes: 00:00:00.000469 (0.469 milliseconds)
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
 ### Listar todos os produtos que tem uma categoria ativa como categoria principal: (_CCI_)
@@ -278,9 +285,8 @@ where p.ce_categoria_principal IN (select c.cp_cod_categoria
 ```
 
 - Tempo para executar 50 vezes: 00:00:00.011191 (11.191 milliseconds)
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
-
 
 ### Listar todos os produtos que tem uma categoria ativa como categoria secundária: (_CCI_)
 
@@ -293,7 +299,7 @@ where p.ce_categoria_secundaria IN (select c.cp_cod_categoria
 ```
 
 - Tempo para executar 50 vezes: 00:00:00.002718 (2.718 milliseconds)
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
 ### Listar todos os produtos, trazendo o nome do produto e as suas categorias primária e segundária. (_CCI_)
@@ -306,7 +312,7 @@ from tbl_produtos p
 ```
 
 - Tempo para executar 50 vezes: 00:00:00.006505 (6.505 milliseconds)
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
 ### Criar uma nova categoria (_CCB_)
@@ -317,7 +323,71 @@ values ('Nome da Categoria', NOW(), NOW());
 ```
 
 - Tempo para executar 50 vezes: 00:00:00.006211 (6.211 milliseconds)
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Deletar uma categoria (_CCB_)
+
+```
+update tbl_categoria set "isDeleted" = true where cp_cod_categoria = codigo;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.001568 (1.568 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Mudar o nome de uma categoria (_CCB_)
+
+```
+update tbl_categoria set "nm_categoria" = 'Categoria' where cp_cod_categoria = codigo;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.000523 (0.523 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Selecionar um produto específico pelo seu código (_CCB_)
+
+```
+select * from tbl_produtos where id_produto = id;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.001549 (1.549 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Atualizar a categoria principal de um produto específico (_CCB_)
+
+```
+update tbl_produtos set "ce_categoria_principal" = codigoCategoria where id_produto = idProduto;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.00498 (0.498 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Atualizar a categoria secundária de um produto específico (_CCB_)
+
+```
+update tbl_produtos set "ce_categoria_secundaria" = codigoCategoria where id_produto = idProduto;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.001494 (1.494 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Recuperar todos os produtos vendidos em determinado estabelecimento: (_CCI_)
+
+```
+perform p.nm_prod, v.quant_comprada, v.valor_unitario
+                from tbl_vendas v
+                         inner join tbl_produtos p on v."produtoId" = p.id_produto
+                where v.cp_cod_estab = 1
+                  and v."isDeleted" = false;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.037214 (37.214 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
 ### Quais são os nomes de todos os produtos cadastrados no banco de dados?
@@ -327,17 +397,17 @@ select nm_prod from tbl_produtos tp;
 ```
 
 - Tempo para executar 50 vezes: ___________
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
 ### Quais são os fornecedores ativos?
-  
+
 ```
 select * from tbl_fornecedores tf where "isActive" = true
 ```
 
 - Tempo para executar 50 vezes: ___________
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
 ### Produtos que estão associados a fornecedores?
@@ -349,7 +419,7 @@ join tbl_fornecedores tf2 on tf2.id  = tf.id_fornecedor
 ```
 
 - Tempo para executar 50 vezes: ___________
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
 ### Nome e o CPF de todos os funcionários cadastrados
@@ -359,7 +429,7 @@ select  "name", "document" from tbl_funcionarios tf
 ```
 
 - Tempo para executar 50 vezes: ___________
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
 ### Quais produtos estão com estoque abaixo do mínimo em uma loja?
@@ -369,7 +439,7 @@ query
 ```
 
 - Tempo para executar 50 vezes: ___________
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
 ### Quantidade de estabelecimentos por Estado
@@ -380,7 +450,7 @@ group by "UF_estab"
 ```
 
 - Tempo para executar 50 vezes: ___________
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
 ### Nome e o CNPJ do fornecedor mais recente cadastrado
@@ -391,7 +461,7 @@ order by "createdAt" desc limit 1
 ```
 
 - Tempo para executar 50 vezes: ___________
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
 ### Quais são os produtos com maior vazão em um determinado período
@@ -405,7 +475,7 @@ order by "quantidade" desc;
 ```
 
 - Tempo para executar 50 vezes: ___________
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
 ### Lista os fornecedores que estão inativos há mais de 180 dias ou que não fizeram nenhuma venda.
@@ -424,7 +494,7 @@ having max(tf.data_venda) < current_date - interval '180 day' or max(tf.data_ven
 ```
 
 - Tempo para executar 50 vezes: ___________
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
 ### Produtos fornecidos por mais de um fornecedor.
@@ -446,5 +516,5 @@ HAVING
 ```
 
 - Tempo para executar 50 vezes: ___________
-- Tempo para executar 50 vezes com indexação: _______  
+- Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
