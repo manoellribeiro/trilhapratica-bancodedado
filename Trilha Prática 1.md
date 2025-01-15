@@ -390,7 +390,7 @@ perform p.nm_prod, v.quant_comprada, v.valor_unitario
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
-### Quais são os nomes de todos os produtos cadastrados no banco de dados?
+### Quais são os nomes de todos os produtos cadastrados no banco de dados? (_CCB_)
 
 ```
 select nm_prod from tbl_produtos tp;
@@ -400,7 +400,7 @@ select nm_prod from tbl_produtos tp;
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
-### Quais são os fornecedores ativos?
+### Quais são os fornecedores ativos? (_CCB_)
 
 ```
 select * from tbl_fornecedores tf where "isActive" = true
@@ -410,7 +410,7 @@ select * from tbl_fornecedores tf where "isActive" = true
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
-### Produtos que estão associados a fornecedores?
+### Produtos que estão associados a fornecedores? (_CCI_)
 
 ```
 select tp.nm_prod, tf2."name" from tbl_produtos tp
@@ -422,7 +422,7 @@ join tbl_fornecedores tf2 on tf2.id  = tf.id_fornecedor
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
-### Nome e o CPF de todos os funcionários cadastrados
+### Nome e o CPF de todos os funcionários cadastrados: (_CCB_)
 
 ```
 select  "name", "document" from tbl_funcionarios tf
@@ -442,7 +442,7 @@ query
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
-### Quantidade de estabelecimentos por Estado
+### Quantidade de estabelecimentos por Estado: (_CCB_)
 
 ```
 select "UF_estab", count("UF_estab") from tbl_estabelecimentos te
@@ -453,7 +453,7 @@ group by "UF_estab"
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
-### Nome e o CNPJ do fornecedor mais recente cadastrado
+### Nome e o CNPJ do fornecedor mais recente cadastrado: (_CCB_)
 
 ```
 select "name", "document" from tbl_fornecedores tf
@@ -464,7 +464,7 @@ order by "createdAt" desc limit 1
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
-### Quais são os produtos com maior vazão em um determinado período
+### Quais são os produtos com maior vazão em um determinado período: (_CCI_)
 
 ```
 select  count(tp.id_produto) as "quantidade", tp.nm_prod from tbl_fornecimento tf
@@ -478,7 +478,7 @@ order by "quantidade" desc;
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
-### Lista os fornecedores que estão inativos há mais de 180 dias ou que não fizeram nenhuma venda.
+### Lista os fornecedores que estão inativos há mais de 180 dias ou que não fizeram nenhuma venda: (_CCI_)
 
 ```
 SELECT
@@ -497,7 +497,7 @@ having max(tf.data_venda) < current_date - interval '180 day' or max(tf.data_ven
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
-### Produtos fornecidos por mais de um fornecedor.
+### Produtos fornecidos por mais de um fornecedor: (_CCA_)
 
 ```
 SELECT
@@ -516,5 +516,122 @@ HAVING
 ```
 
 - Tempo para executar 50 vezes: ___________
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Quantidade de funcionários ativos no sistema: (_CCB_)
+
+```
+select count(*) as total_funcionarios_ativos
+from tbl_funcionarios
+where "isDeleted" = false;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.002936 (2.936 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Todos os estabelecimentos cadastrados em um estado específico:
+
+```
+select * 
+from tbl_estabelecimentos 
+where "UF_estab" = 'SP';
+```
+
+- Tempo para executar 50 vezes: 00:00:00.005988 (5.988 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+
+### Fornecedores que possuem mais de 3 produtos fornecidos: (_CCB_)
+
+```
+perform id_fornecedor
+from tbl_fornecimento
+group by id_fornecedor
+having count(id_produto) > 3;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.002322 (2.322 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Listar os 5 últimos produtos adicionados: (_CCB_) 
+
+```
+SELECT * 
+FROM tbl_produtos 
+WHERE "isDeleted" = false 
+ORDER BY "createdAt" DESC 
+LIMIT 5;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.001737 (1.737 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Contar o número total de produtos
+
+```
+SELECT COUNT(*) 
+FROM tbl_produtos 
+WHERE "isDeleted" = false;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.001177 (1.177 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Fornecedores disponíveis em um certo raio: (_CCB_)
+
+```
+SELECT * 
+FROM tbl_fornecedores 
+WHERE "latitude" BETWEEN 10.0 AND 20.0 
+  AND "longitude" BETWEEN 30.0 AND 40.0 
+  AND "isDeleted" = false;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.005168 (5.168 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Números de estabelecimentos em um estado: (_CCB_)
+
+```
+SELECT "UF_estab", COUNT(*) AS "total_establishments"
+FROM tbl_estabelecimentos 
+WHERE "isDeleted" = false
+GROUP BY "UF_estab";
+```
+
+- Tempo para executar 50 vezes: 00:00:00.002588 (2.588 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Listar todas as reposições de um produto específico: (_CCB_)
+
+```
+SELECT * 
+FROM tbl_reposicao 
+WHERE "id_produto" = 50 
+  AND "isDeleted" = false;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.003014 (3.014 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Listar todos os produtos vendidos em um estabelecimento específico: (_CCI_)
+
+```
+SELECT p."nm_prod", v."quant_comprada", v."preco_venda"
+FROM tbl_vendas v
+INNER JOIN tbl_produtos p ON v."produtoId" = p."id_produto"
+WHERE v."cp_cod_estab" = 1 AND v."isDeleted" = false;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.008097 (8.097 milliseconds)
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
