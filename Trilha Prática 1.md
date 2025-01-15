@@ -793,3 +793,98 @@ ORDER BY "nearest_expiration_date" ASC;
 - Tempo para executar 50 vezes: 00:00:00.014143 (14.143 milliseconds)
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
+
+### Listar todos os produtos associados a mais de 2 fornecedores: (_CCA_)
+
+```
+SELECT p."nm_prod", COUNT(DISTINCT f."id") AS "supplier_count"
+FROM tbl_fornecimento fs
+INNER JOIN tbl_produtos p ON fs."id_produto" = p."id_produto"
+INNER JOIN tbl_fornecedores f ON fs."id_fornecedor" = f."id"
+WHERE fs."isDeleted" = false
+GROUP BY p."nm_prod"
+HAVING COUNT(DISTINCT f."id") > 2;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.010142 (10.142 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Verificar padrões de vendas baseadas na localização e produto: (_CCA_)
+
+```
+select func."name" AS "employee_name", 
+       c."nm_categoria" AS "product_category", 
+       COUNT(r."id") AS "restocks_handled"
+FROM tbl_reposicao r
+JOIN tbl_funcionarios func ON r."id_funcionario" = func."id"
+JOIN tbl_produtos p ON r."id_produto" = p."id_produto"
+JOIN tbl_categoria c ON c."cp_cod_categoria" = p."ce_categoria_principal"
+WHERE r."isDeleted" = false
+GROUP BY func."name", c."nm_categoria"
+ORDER BY "restocks_handled" DESC;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.004139 (4.139 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Mensurar eficiência de funcionários na reposição de um produto: (CCA)
+
+```
+SELECT func."name" AS "employee_name", 
+       c."nm_categoria" AS "product_category", 
+       COUNT(r."id") AS "restocks_handled"
+FROM tbl_reposicao r
+JOIN tbl_funcionarios func ON r."id_funcionario" = func."id"
+JOIN tbl_produtos p ON r."id_produto" = p."id_produto"
+JOIN tbl_categoria c ON c."cp_cod_categoria" = p."ce_categoria_principal"
+WHERE r."isDeleted" = false
+GROUP BY func."name", c."nm_categoria"
+ORDER BY "restocks_handled" DESC;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.015796 (15.796 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Verificar o ciclo de um produto da fornecedora até a venda: (_CCA_)
+
+```
+SELECT f."name" AS "supplier_name", 
+       p."nm_prod" AS "product_name", 
+       forn."data_venda" AS "supply_date", 
+       v."createdAt" AS "sale_date",
+       (v."createdAt" - forn."data_venda") AS "lifecycle_duration"
+FROM tbl_fornecimento forn
+JOIN tbl_fornecedores f ON forn."id_fornecedor" = f."id"
+JOIN tbl_produtos p ON forn."id_produto" = p."id_produto"
+JOIN tbl_vendas v ON v."produtoId" = p."id_produto"
+WHERE forn."isDeleted" = false
+  AND v."isDeleted" = false
+ORDER BY "lifecycle_duration" ASC;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.015578 (15.578 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Encontrar os 5 fornecedores com maior distribuição em uma região: (_CCA_)
+
+```
+SELECT f."name" AS "supplier_name", 
+       COUNT(DISTINCT e."cidade_estab") AS "regions_served"
+FROM tbl_fornecimento forn
+JOIN tbl_fornecedores f ON forn."id_fornecedor" = f."id"
+JOIN tbl_produtos p ON forn."id_produto" = p."id_produto"
+JOIN tbl_vendas v ON v."produtoId" = p."id_produto"
+JOIN tbl_estabelecimentos e ON v."cp_cod_estab" = e."cp_cod_estab"
+WHERE forn."isDeleted" = false
+GROUP BY f."name"
+ORDER BY "regions_served" DESC
+LIMIT 5;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.021459 (21.459 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
