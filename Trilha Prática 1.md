@@ -515,7 +515,7 @@ HAVING
     COUNT(DISTINCT tf2.id) > 1;
 ```
 
-### Estoque disponível por produto
+### Estoque disponível por produto (_CCA_)
 
 ```
 SELECT
@@ -538,7 +538,7 @@ HAVING
 
 ```
 
-### Produtos fornecidos por múltiplos fornecedores
+### Produtos fornecidos por múltiplos fornecedores (_CCA_)
 
 ```
 SELECT
@@ -556,7 +556,7 @@ HAVING
     COUNT(DISTINCT tf.id_fornecedor) > 1;
 ```
 
-### Produtos mais vendidos por estabelecimento
+### Produtos mais vendidos por estabelecimento (_CCA_)
 
 ```
 SELECT
@@ -576,7 +576,6 @@ GROUP BY
     te.nm_estab, tp.nm_prod
 ORDER BY
     total_vendido DESC;
-
 ```
 
 - Tempo para executar 50 vezes: \***\*\_\_\_\*\***
@@ -594,19 +593,6 @@ where "isDeleted" = false;
 - Tempo para executar 50 vezes: 00:00:00.002936 (2.936 milliseconds)
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
-
-### Todos os estabelecimentos cadastrados em um estado específico:
-
-```
-select * 
-from tbl_estabelecimentos 
-where "UF_estab" = 'SP';
-```
-
-- Tempo para executar 50 vezes: 00:00:00.005988 (5.988 milliseconds)
-- Tempo para executar 50 vezes com indexação: _______
-- Tempo para executar 50 vezes com tunning: _________
-
 
 ### Fornecedores que possuem mais de 3 produtos fornecidos: (_CCB_)
 
@@ -632,18 +618,6 @@ LIMIT 5;
 ```
 
 - Tempo para executar 50 vezes: 00:00:00.001737 (1.737 milliseconds)
-- Tempo para executar 50 vezes com indexação: _______
-- Tempo para executar 50 vezes com tunning: _________
-
-### Contar o número total de produtos
-
-```
-SELECT COUNT(*) 
-FROM tbl_produtos 
-WHERE "isDeleted" = false;
-```
-
-- Tempo para executar 50 vezes: 00:00:00.001177 (1.177 milliseconds)
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
 
