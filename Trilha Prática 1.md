@@ -673,3 +673,123 @@ WHERE v."cp_cod_estab" = 1 AND v."isDeleted" = false;
 - Tempo para executar 50 vezes: 00:00:00.008097 (8.097 milliseconds)
 - Tempo para executar 50 vezes com indexação: _______
 - Tempo para executar 50 vezes com tunning: _________
+
+### Contar o número de produtos em cada categoria (_CCI_)
+
+```
+SELECT c."nm_categoria", COUNT(p."id_produto") AS "total_products"
+FROM tbl_categoria c
+LEFT JOIN tbl_produtos p ON c."cp_cod_categoria" = p."ce_categoria_principal"
+WHERE c."isDeleted" = false
+GROUP BY c."nm_categoria";
+```
+
+- Tempo para executar 50 vezes: 00:00:00.008779 (8.779 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Valor total de vendas para cada estabelecimento (_CCI_)
+
+```
+SELECT e."nm_estab", SUM(v."preco_venda") AS "total_sales"
+FROM tbl_vendas v
+INNER JOIN tbl_estabelecimentos e ON v."cp_cod_estab" = e."cp_cod_estab"
+WHERE v."isDeleted" = false
+GROUP BY e."nm_estab";
+```
+
+- Tempo para executar 50 vezes: 00:00:00.00688 (0.688 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Produtos que foram restocados nos últimos 30 dias: (_CCI_)
+
+```
+SELECT p."nm_prod", r."data_reposicao"
+FROM tbl_reposicao r
+INNER JOIN tbl_produtos p ON r."id_produto" = p."id_produto"
+WHERE r."data_reposicao" >= NOW() - INTERVAL '30 days' AND r."isDeleted" = false;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.00353 (0.353 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Estabelecimentos sem  vendas: (_CCI_)
+
+```
+SELECT e."nm_estab"
+FROM tbl_estabelecimentos e
+LEFT JOIN tbl_vendas v ON e."cp_cod_estab" = v."cp_cod_estab" AND v."isDeleted" = false
+WHERE v."id" IS NULL AND e."isDeleted" = false;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.003216 (3.216 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Produtos vendidos com os seus fornecedores: (_CCI_)
+
+```
+SELECT p."nm_prod", f."name" AS "supplier_name"
+FROM tbl_fornecimento fs
+INNER JOIN tbl_produtos p ON fs."id_produto" = p."id_produto"
+INNER JOIN tbl_fornecedores f ON fs."id_fornecedor" = f."id"
+WHERE fs."isDeleted" = false;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.010217 (10.217 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Calcular o valor médio por unidade para cada estabelecimento: (_CCI_)
+
+```
+SELECT e."nm_estab" AS "establishment_name", 
+       AVG(v."valor_unitario") AS "avg_price_per_unit"
+FROM tbl_estabelecimentos e
+JOIN tbl_vendas v ON e."cp_cod_estab" = v."cp_cod_estab"
+WHERE v."isDeleted" = false
+GROUP BY e."nm_estab"
+ORDER BY "avg_price_per_unit" DESC;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.005399 (5.399 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Número de produtos vendidos por categoria: (CCI)
+
+```
+SELECT c."nm_categoria", 
+       COUNT(v."produtoId") AS "total_products_sold"
+FROM tbl_categoria c
+LEFT JOIN tbl_produtos p ON c."cp_cod_categoria" = p."ce_categoria_principal"
+LEFT JOIN tbl_vendas v ON p."id_produto" = v."produtoId"
+WHERE c."isDeleted" = false
+GROUP BY c."nm_categoria"
+ORDER BY "total_products_sold" DESC;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.009079 (9.079 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
+
+### Listar fornecedores que fornecem produtos com datas de validade próximas: (_CCA_)
+
+```
+SELECT f."name" AS "supplier_name", 
+       p."nm_prod" AS "product_name", 
+       MIN(forn."data_vencimento") AS "nearest_expiration_date"
+FROM tbl_fornecimento forn
+JOIN tbl_fornecedores f ON forn."id_fornecedor" = f."id"
+JOIN tbl_produtos p ON forn."id_produto" = p."id_produto"
+WHERE forn."data_vencimento" > CURRENT_DATE
+  AND forn."isDeleted" = false
+GROUP BY f."name", p."nm_prod"
+ORDER BY "nearest_expiration_date" ASC;
+```
+
+- Tempo para executar 50 vezes: 00:00:00.014143 (14.143 milliseconds)
+- Tempo para executar 50 vezes com indexação: _______
+- Tempo para executar 50 vezes com tunning: _________
