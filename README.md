@@ -939,3 +939,24 @@ HAVING
 ```
 select  * from estoque_status es ;
 ```
+
+### Produtos com vencimento próximo
+
+```
+create materialized view produtos_proximos_vendcimento as
+SELECT f."name" AS "supplier_name",
+       p."nm_prod" AS "product_name",
+       MIN(forn."data_vencimento") AS "nearest_expiration_date"
+FROM tbl_fornecimento forn
+JOIN tbl_fornecedores f ON forn."id_fornecedor" = f."id"
+JOIN tbl_produtos p ON forn."id_produto" = p."id_produto"
+WHERE forn."data_vencimento" > CURRENT_DATE
+  AND forn."isDeleted" = false
+GROUP BY f."name", p."nm_prod"
+ORDER BY "nearest_expiration_date" ASC;
+
+```
+
+```
+select * from produtos_proximos_vendcimento;
+```
