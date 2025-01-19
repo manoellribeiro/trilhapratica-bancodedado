@@ -6,15 +6,49 @@ Após análise do problema, dos requisitos iniciais e do mini-mundo fornecidos,
 sugerimos as seguintes modificações no projeto afim de melhorar o sistema e
 atender melhor a necessidade dos clientes.
 
-### Novas tabelas
+## Novas tabelas
 
-> (!!!!!!!! Detalhar melhor isso para fazer entrega)
+### Tabela de vendas (_tbl_vendas_)
 
-- Tabela de vendas (_tbl_vendas_): _Adicionar uma descrição_
-- Tabela de reposição (_tbl_reposicao_): _Adicionar uma descrição_
-- Tabela de fornecimento (_tbl_fornecimento_): _Adicionar uma descrição_
+- **id** [bigint] [primary key, increment]: Identificador único de uma venda.
+- **produtoId** [bigint]: Identificador do produto que foi vendido.
+- **cp_cod_estab** [bigint]: Código do estabelecimento que vendeu o produto 
+- **updatedAt** [timestamp]: Indicador de tempo para sempre que uma entrada sofre alteração.
+- **createdAt** [timestamp, not null]: Indicador de quando a entrada foi criada.
+- **deletedAt** [timestamp, default: null]: Indicador de quando o soft-delete da entrada foi realizado.
+- **isDeleted** [bool, default: false]: Indicador de deleção de uma entrada (soft-delete)
+- **preco_venda** [int]: Preço que da venda do produto.
+- **valor_unitario** [int]: Preço unitário da venda do produto.
+- **quant_comprada** [int]: Quantidade comprada do produto.
 
-### Novas variáveis
+### Tabela de reposição (_tbl_reposicao_)
+
+- **id** [bigint] [primary key, not null, increment]: Identificador único de uma reposição.
+- **id_funcionario** [bigint]: Identificador do funcionário que fez uma reposição.
+- **id_produto** [bigint]: Identificador do produto que foi reposto. 
+- **data_reposicao** [timestamp]: Data que aconteceu a reposição.
+- **updatedAt** [timestamp]: Indicador de tempo para sempre que uma entrada sofre alteração.
+- **createdAt** [timestamp, not null]: Indicador de quando a entrada foi criada.
+- **deletedAt** [timestamp, default: null]: Indicador de quando o soft-delete da entrada foi realizado.
+- **isDeleted** [bool, default: false]: Indicador de deleção de uma entrada (soft-delete).
+
+
+### Tabela de fornecimento (_tbl_fornecimento_):
+
+- **id** [bigint] [primary key, not null, increment]: Identificador único de um fornecimento.
+- **id_fornecedor** [bigint]: Identificador do fornecedor.
+- **id_produto** [bigint]: Identificador do produto fornecido. 
+- **data_venda** [timestamp]: Data da venda do fornecedor para o estabelecimento.
+- **data_vencimento** [timestamp]: Data de vencimento dos produtos.
+- **valor_venda** [int]: Valor da venda dos produtos.
+- **valor_unitario_produto** [int]: Valor unitário do produto.
+- **updatedAt** [timestamp]: Indicador de tempo para sempre que uma entrada sofre alteração.
+- **createdAt** [timestamp, not null]: Indicador de quando a entrada foi criada.
+- **deletedAt** [timestamp, default: null]: Indicador de quando o soft-delete da entrada foi realizado.
+- **isDeleted** [bool, default: false]: Indicador de deleção de uma entrada (soft-delete).
+
+
+## Novas variáveis
 
 De uma forma geral, para uma boa prática de banco de dados, vamos adicionar em todas as tabelas do banco, sejam elas
 novas ou antigas, os seguintes atributos:
@@ -44,17 +78,15 @@ Na tabela de estabelecimentos, vamos adicionar os seguintes atributos:
 - **Latitude de onde o estabelecimento fica** (latitude)
 - **Longitude de onde o estabelecimento fica** (latitude)
 
-### Novos relacionamentos
-
-> (!!!!!! Detalhar melhor isso para fazer entrega)
+## Novos relacionamentos
 
 - Na tabela de fornecimento temos uma relação com fornecedor e produtos
 - Na tabela de reposição temos relações com funcionários e produtos
 - Na tabela de vendas temos relações com produtos
 
-### Novos requisitos
+## Novos requisitos
 
-- **RF7**: O sistema deve indicar produtos que não foram vendido para clientes finais no último mês, assim será possível
+- **RF7**: O sistema deve indicar produtos que não foram vendidos para clientes finais no último mês, assim será possível
   evitar o abastecimento de estoque desses produtos e evitar o investimento em produtos que não estão sendo vendidos.
 
 # Criação dos modelos de banco de dados
