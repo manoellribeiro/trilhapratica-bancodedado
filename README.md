@@ -318,7 +318,6 @@ select * from tbl_categoria where "isDeleted" = false;
 
 - Tempo para executar 50 vezes: 00:00:00.003411 (3.411 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.00127 (0.127)
-  
 
 ### Selecionar uma categoria específica através do seu _cp_cod_categoria_: (_CCB_)
 
@@ -328,7 +327,6 @@ select * from tbl_categoria where cp_cod_categoria = 2;
 
 - Tempo para executar 50 vezes: 00:00:00.00079 (0.079 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.000824 (0.824 milliseconds)
-  
 
 ### Contar a quantidade de categorias disponíveis para utilização: (_CCB_)
 
@@ -338,7 +336,6 @@ select count(*) from tbl_categoria where "isDeleted" = false;
 
 - Tempo para executar 50 vezes: 00:00:00.000469 (0.469 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.000961 (0.961 )
-  
 
 ### Listar todos os produtos que tem uma categoria ativa como categoria principal: (_CCI_)
 
@@ -352,7 +349,6 @@ where p.ce_categoria_principal IN (select c.cp_cod_categoria
 
 - Tempo para executar 50 vezes: 00:00:00.011191 (11.191 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.007942 (7.942 milliseconds)
-  
 
 ### Listar todos os produtos que tem uma categoria ativa como categoria secundária: (_CCI_)
 
@@ -366,7 +362,6 @@ where p.ce_categoria_secundaria IN (select c.cp_cod_categoria
 
 - Tempo para executar 50 vezes: 00:00:00.002718 (2.718 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.005744 (5.744 milliseconds)
-  
 
 ### Listar todos os produtos, trazendo o nome do produto e as suas categorias primária e segundária. (_CCI_)
 
@@ -379,7 +374,6 @@ from tbl_produtos p
 
 - Tempo para executar 50 vezes: 00:00:00.006505 (6.505 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.009382 (9.382 milliseconds)
-  
 
 ### Criar uma nova categoria (_CCB_)
 
@@ -390,7 +384,6 @@ values ('Nome da Categoria', NOW(), NOW());
 
 - Tempo para executar 50 vezes: 00:00:00.006211 (6.211 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.003806 (3.806 milliseconds)
-  
 
 ### Deletar uma categoria (_CCB_)
 
@@ -400,7 +393,6 @@ update tbl_categoria set "isDeleted" = true where cp_cod_categoria = codigo;
 
 - Tempo para executar 50 vezes: 00:00:00.001568 (1.568 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.002753 (2.753 milliseconds)
-  
 
 ### Mudar o nome de uma categoria (_CCB_)
 
@@ -410,7 +402,6 @@ update tbl_categoria set "nm_categoria" = 'Categoria' where cp_cod_categoria = c
 
 - Tempo para executar 50 vezes: 00:00:00.000523 (0.523 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.000527 ((0.527 milliseconds))
-  
 
 ### Selecionar um produto específico pelo seu código (_CCB_)
 
@@ -420,7 +411,6 @@ select * from tbl_produtos where id_produto = id;
 
 - Tempo para executar 50 vezes: 00:00:00.001549 (1.549 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.000507 (0.507 milliseconds)
-  
 
 ### Atualizar a categoria principal de um produto específico (_CCB_)
 
@@ -430,7 +420,6 @@ update tbl_produtos set "ce_categoria_principal" = codigoCategoria where id_prod
 
 - Tempo para executar 50 vezes: 00:00:00.00498 (0.498 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.004211 (4.211 milliseconds)
-  
 
 ### Atualizar a categoria secundária de um produto específico (_CCB_)
 
@@ -440,7 +429,6 @@ update tbl_produtos set "ce_categoria_secundaria" = codigoCategoria where id_pro
 
 - Tempo para executar 50 vezes: 00:00:00.001494 (1.494 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.001735 (1.735 milliseconds)
-  
 
 ### Recuperar todos os produtos vendidos em determinado estabelecimento: (_CCI_)
 
@@ -454,7 +442,6 @@ select p.nm_prod, v.quant_comprada, v.valor_unitario
 
 - Tempo para executar 50 vezes: 00:00:00.037214 (37.214 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.002083 (2.083 milliseconds)
-  
 
 ### Quais são os nomes de todos os produtos cadastrados no banco de dados? (_CCB_)
 
@@ -464,7 +451,6 @@ select nm_prod from tbl_produtos tp;
 
 - Tempo para executar 50 vezes: 00:00:00.000449 (0.449 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.000512 (0.512 milliseconds)
-  
 
 ### Quais são os fornecedores ativos? (_CCB_)
 
@@ -474,7 +460,6 @@ select * from tbl_fornecedores tf where "isActive" = true
 
 - Tempo para executar 50 vezes: 00:00:00.000703 (0.703 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.000565 (0.565 milliseconds)
-  
 
 ### Produtos que estão associados a fornecedores? (_CCI_)
 
@@ -486,7 +471,6 @@ join tbl_fornecedores tf2 on tf2.id  = tf.id_fornecedor;
 
 - Tempo para executar 50 vezes: 00:00:00.006713 (6.713 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.005839 (5.839 milliseconds)
-  
 
 ### Nome e o CPF de todos os funcionários cadastrados: (_CCB_)
 
@@ -496,7 +480,6 @@ select  "name", "document" from tbl_funcionarios tf;
 
 - Tempo para executar 50 vezes: 00:00:00.000890 (0.890 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.000780 (0.780 milliseconds)
-  
 
 ### Quantidade de estabelecimentos por Estado: (_CCB_)
 
@@ -507,7 +490,6 @@ group by "UF_estab"
 
 - Tempo para executar 50 vezes: 00:00:00.001290 (1.290 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.001457 (1.457 milliseconds)
-  
 
 ### Nome e o CNPJ do fornecedor mais recente cadastrado: (_CCB_)
 
@@ -518,7 +500,6 @@ order by "createdAt" desc limit 1
 
 - Tempo para executar 50 vezes: 00:00:00.00987 (0.987 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.01097 (1.097 milliseconds)
-  
 
 ### Quais são os produtos com maior vazão em um determinado período: (_CCI_)
 
@@ -532,7 +513,6 @@ order by "quantidade" desc;
 
 - Tempo para executar 50 vezes: 00:00:00.005561 (5.561 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.005273 (5.273 milliseconds)
-  
 
 ### Lista os fornecedores que estão inativos há mais de 180 dias ou que não fizeram nenhuma venda: (_CCI_)
 
@@ -551,7 +531,6 @@ having max(tf.data_venda) < current_date - interval '180 day' or max(tf.data_ven
 
 - Tempo para executar 50 vezes: 00:00:00.003942 (3.942 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.004429 (4.429 milliseconds)
-  
 
 ### Produtos fornecidos por mais de um fornecedor: (_CCA_)
 
@@ -573,7 +552,6 @@ HAVING
 
 - Tempo para executar 50 vezes: 00:00:00.008200 (8.200 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.007279 (7.279 milliseconds)
-  
 
 ### Estoque disponível por produto (_CCA_)
 
@@ -599,7 +577,6 @@ HAVING
 
 - Tempo para executar 50 vezes: 00:00:00.008200 (8.200 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.007279 (7.279 milliseconds)
-  
 
 ### Produtos fornecidos por múltiplos fornecedores (_CCA_)
 
@@ -621,7 +598,6 @@ HAVING
 
 - Tempo para executar 50 vezes: 00:00:00.0011356 (11.356 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.010063 (10.063 milliseconds)
-  
 
 ### Produtos mais vendidos por estabelecimento (_CCA_)
 
@@ -647,7 +623,6 @@ ORDER BY
 
 - Tempo para executar 50 vezes: 00:00:00.005198 (5.198 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.006438 (6.438 milliseconds)
-  
 
 ### Quantidade de funcionários ativos no sistema: (_CCB_)
 
@@ -659,7 +634,6 @@ where "isDeleted" = false;
 
 - Tempo para executar 50 vezes: 00:00:00.002936 (2.936 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.001064 (1.064 milliseconds)
- 
 
 ### Fornecedores que possuem mais de 3 produtos fornecidos: (_CCB_)
 
@@ -672,61 +646,56 @@ having count(id_produto) > 3;
 
 - Tempo para executar 50 vezes: 00:00:00.002322 (2.322 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.000825 (0.825 milliseconds)
- 
 
-### Listar os 5 últimos produtos adicionados: (_CCB_) 
+### Listar os 5 últimos produtos adicionados: (_CCB_)
 
 ```
-SELECT * 
-FROM tbl_produtos 
-WHERE "isDeleted" = false 
-ORDER BY "createdAt" DESC 
+SELECT *
+FROM tbl_produtos
+WHERE "isDeleted" = false
+ORDER BY "createdAt" DESC
 LIMIT 5;
 ```
 
 - Tempo para executar 50 vezes: 00:00:00.001737 (1.737 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.001416 (1.416 milliseconds)
- 
 
 ### Fornecedores disponíveis em um certo raio: (_CCB_)
 
 ```
-SELECT * 
-FROM tbl_fornecedores 
-WHERE "latitude" BETWEEN 10.0 AND 20.0 
-  AND "longitude" BETWEEN 30.0 AND 40.0 
+SELECT *
+FROM tbl_fornecedores
+WHERE "latitude" BETWEEN 10.0 AND 20.0
+  AND "longitude" BETWEEN 30.0 AND 40.0
   AND "isDeleted" = false;
 ```
 
 - Tempo para executar 50 vezes: 00:00:00.005168 (5.168 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.004133 (4.133 milliseconds)
- 
 
 ### Números de estabelecimentos em um estado: (_CCB_)
 
 ```
 SELECT "UF_estab", COUNT(*) AS "total_establishments"
-FROM tbl_estabelecimentos 
+FROM tbl_estabelecimentos
 WHERE "isDeleted" = false
 GROUP BY "UF_estab";
 ```
 
 - Tempo para executar 50 vezes: 00:00:00.002588 (2.588 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.000834 (0.834 milliseconds)
- 
 
 ### Listar todas as reposições de um produto específico: (_CCB_)
 
 ```
-SELECT * 
-FROM tbl_reposicao 
-WHERE "id_produto" = 50 
+SELECT *
+FROM tbl_reposicao
+WHERE "id_produto" = 50
   AND "isDeleted" = false;
 ```
 
 - Tempo para executar 50 vezes: 00:00:00.003014 (3.014 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.000388 (0.388 milliseconds)
- 
 
 ### Listar todos os produtos vendidos em um estabelecimento específico: (_CCI_)
 
@@ -739,7 +708,6 @@ WHERE v."cp_cod_estab" = 1 AND v."isDeleted" = false;
 
 - Tempo para executar 50 vezes: 00:00:00.008097 (8.097 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.0124 (0.124 milliseconds)
- 
 
 ### Contar o número de produtos em cada categoria (_CCI_)
 
@@ -752,8 +720,7 @@ GROUP BY c."nm_categoria";
 ```
 
 - Tempo para executar 50 vezes: 00:00:00.008779 (8.779 milliseconds)
-- Tempo para executar 50 vezes com indexação: 00:00:00.012992 (12.992 milliseconds)  
- 
+- Tempo para executar 50 vezes com indexação: 00:00:00.012992 (12.992 milliseconds)
 
 ### Valor total de vendas para cada estabelecimento (_CCI_)
 
@@ -767,7 +734,6 @@ GROUP BY e."nm_estab";
 
 - Tempo para executar 50 vezes: 00:00:00.00688 (0.688 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.007914 (7.914 milliseconds)
- 
 
 ### Produtos que foram restocados nos últimos 30 dias: (_CCI_)
 
@@ -780,9 +746,8 @@ WHERE r."data_reposicao" >= NOW() - INTERVAL '30 days' AND r."isDeleted" = false
 
 - Tempo para executar 50 vezes: 00:00:00.00353 (0.353 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.005023 (5.023 milliseconds)
- 
 
-### Estabelecimentos sem  vendas: (_CCI_)
+### Estabelecimentos sem vendas: (_CCI_)
 
 ```
 SELECT e."nm_estab"
@@ -793,7 +758,6 @@ WHERE v."id" IS NULL AND e."isDeleted" = false;
 
 - Tempo para executar 50 vezes: 00:00:00.003216 (3.216 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.002916 (2.916 milliseconds)
- 
 
 ### Produtos vendidos com os seus fornecedores: (_CCI_)
 
@@ -807,12 +771,11 @@ WHERE fs."isDeleted" = false;
 
 - Tempo para executar 50 vezes: 00:00:00.010217 (10.217 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.006528 (6.528 milliseconds)
- 
 
 ### Calcular o valor médio por unidade para cada estabelecimento: (_CCI_)
 
 ```
-SELECT e."nm_estab" AS "establishment_name", 
+SELECT e."nm_estab" AS "establishment_name",
        AVG(v."valor_unitario") AS "avg_price_per_unit"
 FROM tbl_estabelecimentos e
 JOIN tbl_vendas v ON e."cp_cod_estab" = v."cp_cod_estab"
@@ -823,12 +786,11 @@ ORDER BY "avg_price_per_unit" DESC;
 
 - Tempo para executar 50 vezes: 00:00:00.005399 (5.399 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.012903 (12.903 milliseconds)
- 
 
 ### Número de produtos vendidos por categoria: (CCI)
 
 ```
-SELECT c."nm_categoria", 
+SELECT c."nm_categoria",
        COUNT(v."produtoId") AS "total_products_sold"
 FROM tbl_categoria c
 LEFT JOIN tbl_produtos p ON c."cp_cod_categoria" = p."ce_categoria_principal"
@@ -840,13 +802,12 @@ ORDER BY "total_products_sold" DESC;
 
 - Tempo para executar 50 vezes: 00:00:00.009079 (9.079 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.008992 (8.992 milliseconds)
- 
 
 ### Listar fornecedores que fornecem produtos com datas de validade próximas: (_CCA_)
 
 ```
-SELECT f."name" AS "supplier_name", 
-       p."nm_prod" AS "product_name", 
+SELECT f."name" AS "supplier_name",
+       p."nm_prod" AS "product_name",
        MIN(forn."data_vencimento") AS "nearest_expiration_date"
 FROM tbl_fornecimento forn
 JOIN tbl_fornecedores f ON forn."id_fornecedor" = f."id"
@@ -859,7 +820,6 @@ ORDER BY "nearest_expiration_date" ASC;
 
 - Tempo para executar 50 vezes: 00:00:00.014143 (14.143 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.013436 (13.436 milliseconds)
- 
 
 ### Listar todos os produtos associados a mais de 2 fornecedores: (_CCA_)
 
@@ -875,13 +835,12 @@ HAVING COUNT(DISTINCT f."id") > 2;
 
 - Tempo para executar 50 vezes: 00:00:00.010142 (10.142 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.009273 (9.273 milliseconds)
- 
 
 ### Verificar padrões de vendas baseadas na localização e produto: (_CCA_)
 
 ```
-select func."name" AS "employee_name", 
-       c."nm_categoria" AS "product_category", 
+select func."name" AS "employee_name",
+       c."nm_categoria" AS "product_category",
        COUNT(r."id") AS "restocks_handled"
 FROM tbl_reposicao r
 JOIN tbl_funcionarios func ON r."id_funcionario" = func."id"
@@ -894,13 +853,12 @@ ORDER BY "restocks_handled" DESC;
 
 - Tempo para executar 50 vezes: 00:00:00.004139 (4.139 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.009156 (9.156 milliseconds)
- 
 
 ### Mensurar eficiência de funcionários na reposição de um produto: (CCA)
 
 ```
-SELECT func."name" AS "employee_name", 
-       c."nm_categoria" AS "product_category", 
+SELECT func."name" AS "employee_name",
+       c."nm_categoria" AS "product_category",
        COUNT(r."id") AS "restocks_handled"
 FROM tbl_reposicao r
 JOIN tbl_funcionarios func ON r."id_funcionario" = func."id"
@@ -913,14 +871,13 @@ ORDER BY "restocks_handled" DESC;
 
 - Tempo para executar 50 vezes: 00:00:00.015796 (15.796 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.00975 (0.975 milliseconds)
- 
 
 ### Verificar o ciclo de um produto da fornecedora até a venda: (_CCA_)
 
 ```
-SELECT f."name" AS "supplier_name", 
-       p."nm_prod" AS "product_name", 
-       forn."data_venda" AS "supply_date", 
+SELECT f."name" AS "supplier_name",
+       p."nm_prod" AS "product_name",
+       forn."data_venda" AS "supply_date",
        v."createdAt" AS "sale_date",
        (v."createdAt" - forn."data_venda") AS "lifecycle_duration"
 FROM tbl_fornecimento forn
@@ -934,12 +891,11 @@ ORDER BY "lifecycle_duration" ASC;
 
 - Tempo para executar 50 vezes: 00:00:00.015578 (15.578 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.00877 (0.877 milliseconds)
- 
 
 ### Encontrar os 5 fornecedores com maior distribuição em uma região: (_CCA_)
 
 ```
-SELECT f."name" AS "supplier_name", 
+SELECT f."name" AS "supplier_name",
        COUNT(DISTINCT e."cidade_estab") AS "regions_served"
 FROM tbl_fornecimento forn
 JOIN tbl_fornecedores f ON forn."id_fornecedor" = f."id"
@@ -954,4 +910,32 @@ LIMIT 5;
 
 - Tempo para executar 50 vezes: 00:00:00.021459 (21.459 milliseconds)
 - Tempo para executar 50 vezes com indexação: 00:00:00.012997 (12.997 milliseconds)
- 
+
+# Criando Views
+
+### Status do estoque com View
+
+```
+create materialized view estoque_status as
+SELECT
+   tp.nm_prod AS produto,
+   COUNT(tr.id) AS reposicoes_realizadas,
+   SUM(tv.quant_comprada) AS total_vendido,
+   (COUNT(tr.id) - SUM(tv.quant_comprada)) AS estoque_atual
+FROM
+   tbl_produtos tp
+LEFT JOIN
+   tbl_reposicao tr ON tp.id_produto = tr.id_produto
+LEFT JOIN
+   tbl_vendas tv ON tp.id_produto = tv."produtoId" AND tv."isDeleted" = FALSE
+WHERE
+   tp."isDeleted" = FALSE
+GROUP BY
+   tp.nm_prod
+HAVING
+   (COUNT(tr.id) - SUM(tv.quant_comprada)) < 10;
+```
+
+```
+select  * from estoque_status es ;
+```
