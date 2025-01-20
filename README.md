@@ -993,4 +993,87 @@ ORDER BY "nearest_expiration_date" ASC;
 
 ```
 select * from produtos_proximos_vendcimento;
+
+```
+
+# Stored procedures
+
+### Historico de vendas por período
+
+```
+CREATE OR REPLACE FUNCTION historico_vendas_por_periodo(
+    data_inicio DATE,
+    data_fim DATE
+)
+RETURNS TABLE(
+    loja VARCHAR,
+    produto VARCHAR,
+    quantidade_vendida BIGINT,
+    receita_total NUMERIC
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        te.nm_estab AS loja,
+        tp.nm_prod AS produto,
+        SUM(tv.quant_comprada) AS quantidade_vendida,
+        SUM(tv.preco_venda * tv.quant_comprada)::numeric AS receita_total
+    FROM
+        tbl_vendas tv
+    JOIN
+        tbl_estabelecimentos te ON tv.cp_cod_estab = te.cp_cod_estab
+    JOIN
+        tbl_produtos tp ON tv."produtoId" = tp.id_produto
+    WHERE
+        tv."createdAt" BETWEEN data_inicio AND data_fim
+    GROUP BY
+        te.nm_estab, tp.nm_prod
+    ORDER BY
+        te.nm_estab, receita_total DESC;
+END;
+$$;
+```
+
+```
+SELECT * FROM historico_vendas_por_periodo('2024-01-01', '2024-12-31');
+```
+
+### Produtos com baixa reposição
+
+```
+
+CREATE OR REPLACE PROCEDURE produtos_baixa_reposicao(
+    IN limite_reposicao INT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    CREATE TEMP TABLE temp_produtos_baixa_reposicao AS
+    SELECT
+        tp.nm_prod AS produto,
+        COUNT(tr.id) AS frequencia_reposicao
+    FROM
+        tbl_produtos tp
+    LEFT JOIN
+        tbl_reposicao tr ON tp.id_produto = tr.id_produto
+    GROUP BY
+        tp.nm_prod
+    HAVING
+        COUNT(tr.id) < limite_reposicao
+    ORDER BY
+        frequencia_reposicao ASC;
+END;
+$$;
+
+```
+
+```
+CALL produtos_baixa_reposicao(5);
+```
+
+```
+SELECT * FROM temp_produtos_baixa_reposicao;
+
 ```
