@@ -100,7 +100,6 @@ O modelo conceitual do banco de dados, como foi disponibilizado pelo professor e
 
 ![Modelo Conceitual do banco de dados da trilha prática](assets/modelo_conceitual.png)
 
-> Colocar aqui a imagem do modelo conceitual que o professor disponibilizou
 
 ### Lógico
 
