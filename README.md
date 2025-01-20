@@ -96,7 +96,9 @@ banco de dados. Já para criação do modelo lógico a ferramenta escolhida foi 
 
 ### Conceitual
 
-Esse é o link público para acesso do modelo conceitual -> (atualizar o link do modelo)
+O modelo conceitual do banco de dados, como foi disponibilizado pelo professor em sala de aula.
+
+![Modelo Conceitual do banco de dados da trilha prática](assets/modelo_conceitual.png)
 
 > Colocar aqui a imagem do modelo conceitual que o professor disponibilizou
 
